@@ -37,9 +37,6 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-
-      # - name: Adding Known Hosts
-      #   run: ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
       
       - name: Do the build
         run: |
@@ -47,4 +44,6 @@ jobs:
           npm run $BUILD_SCRIPT
 
       - name: Move Files To Files to Server 
-        run: rsync -a -v --del ./dist/. $CONNECTION:$SETUP_PATH
+        # removed the --del flag, so that other sub folder based projects aren't removed
+        # may want a different approach in future to be sure stale files get removed
+        run: rsync -a -v ./dist/. $CONNECTION:$SETUP_PATH
